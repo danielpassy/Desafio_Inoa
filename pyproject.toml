@@ -9,8 +9,15 @@ packages = [{include = "desafio_inoa"}]
 [tool.poetry.dependencies]
 python = "^3.10"
 django-ninja = "^0.22.2"
+ruff = "^0.0.279"
+black = "^23.7.0"
+pytest-django = "^4.5.2"
 
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "backend.settings"
+python_files = ["test_*.py", "test.py", "*_test.py", "testing/python/*.py"]
