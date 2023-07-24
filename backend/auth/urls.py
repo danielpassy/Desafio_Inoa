@@ -1,26 +1,6 @@
-from django.http import JsonResponse
-from django.urls import include, path
-from pydantic import BaseModel
-from django.contrib.auth import authenticate, login
-
-
-def login(request):
-    login_form = LoginForm(**request.POST.dict())
-    user = authenticate(
-        request, username=login_form.username, password=login_form.password
-    )
-    if user is not None:
-        login(request, user)
-        return JsonResponse("Logged in")
-    else:
-        JsonResponse("Invalid credentials", status=401)
-
-
-class LoginForm(BaseModel):
-    password = str
-    username = str
-
+from django.urls import path
+from .views import auth_api
 
 urlpatterns = [
-    path("admin/", login),
+    path("", auth_api.urls),
 ]
