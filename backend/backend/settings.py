@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    "user_auth",
+    "auth_user",
     "core",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -102,7 +102,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-AUTHENTICATION_BACKENDS = ["auth.auth_backend.EmailBackend"]
+AUTHENTICATION_BACKENDS = ["auth_user.auth_backend.EmailBackend"]
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -126,6 +126,7 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+AUTH_USER_MODEL = "auth_user.User"
 
 # Providers
 SENDGRID_API_KEY = "sdasd"
