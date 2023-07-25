@@ -2,7 +2,7 @@ from ninja import NinjaAPI, Schema
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 
-auth_api = NinjaAPI()
+auth_api = NinjaAPI(urls_namespace="auth")
 
 
 class LoginForm(Schema):
