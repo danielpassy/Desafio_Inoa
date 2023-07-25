@@ -20,4 +20,4 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "backend.settings"
-python_files = ["test_*.py", "*_tests.py", "test.py"]
+python_files = ["test_*.py", "*_tests.py", "tests.py"]
