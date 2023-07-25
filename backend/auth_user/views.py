@@ -1,6 +1,7 @@
 from ninja import NinjaAPI, Schema
-from django.contrib.auth import authenticate
-from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login as django_login
+
+from auth_user.models import User
 
 auth_api = NinjaAPI(urls_namespace="auth")
 
@@ -24,7 +25,7 @@ def login(request, data: LoginForm):
     if user is None:
         return 401, {"error": "Invalid credentials"}
 
-    login(request, user)
+    django_login(request, user)
     return 200, {"message": "Logged in"}
 
 
@@ -42,5 +43,5 @@ def register(request, data: RegisterForm):
     user = User.objects.create_user(
         username=data.email, email=data.email, password=data.password
     )
-    login(request, user)
+    django_login(request, user=user)
     return 201, {"message": "User sucessfully created"}
