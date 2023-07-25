@@ -1,5 +1,7 @@
 from django.db import models
 
+from auth_user.models import User
+
 
 class Asset(models.Model):
     name = models.TextField()
@@ -14,7 +16,7 @@ class UserAlert(models.Model):
     asset = models.ForeignKey(Asset, on_delete=models.CASCADE)
     inferior_tunel = models.IntegerField()
     superior_tunel = models.IntegerField()
-    user = models.ForeignKey("auth.User", on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
 class Currency(models.TextChoices):
