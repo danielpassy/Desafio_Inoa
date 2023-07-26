@@ -1,5 +1,10 @@
 import requests
 
+from adapters.b3.typing import time_T
+
+# docs can be found at
+# https://brapi.dev/docs
+
 
 def available_stocks(search: str) -> dict[str, any]:
     params = {
@@ -11,7 +16,7 @@ def available_stocks(search: str) -> dict[str, any]:
     return response.json()
 
 
-def stock_details(stock, range, interval):
+def stock_details(stock: list[str], range: time_T, interval: time_T):
     params = {
         "range": range,
         "interval": interval,
