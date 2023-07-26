@@ -23,8 +23,8 @@ class Error(Schema):
 
 
 class AssetFilter(Schema):
-    ids: list[str]
-    initial_date: datetime.date
+    ids: list[str] | None
+    initial_date: datetime.date | None
     end_date: datetime.date | None
 
     @validator("initial_date", pre=True)
@@ -34,8 +34,11 @@ class AssetFilter(Schema):
             return datetime.datetime.now() - datetime.timedelta(days=30)
 
 
-@core_api.get("/assets", response={200: Assets})
-def assets(request, filters: AssetFilter):
+@core_api.get("/assets", response={200: dict})
+def assets(request, filters: AssetFilter = None):
+    if not filters:
+        filters = AssetFilter()
+
     assets = Asset.objects.all()
     if filters.ids:
         assets = assets.filter(id__in=filters.ids)
@@ -44,7 +47,7 @@ def assets(request, filters: AssetFilter):
     if filters.end_date:
         assets = assets.filter(date__lte=filters.end_date)
 
-    return 200, {"assets": model_to_dict(assets)}
+    return 200, {"assets": [model_to_dict(a) for a in assets]}
 
 
 @core_api.get("/alerts", response={200: dict})
