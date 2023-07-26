@@ -12,6 +12,7 @@ django-ninja = "^0.22.2"
 ruff = "^0.0.279"
 black = "^23.7.0"
 pytest-django = "^4.5.2"
+requests = "^2.31.0"
 
 
 [build-system]
