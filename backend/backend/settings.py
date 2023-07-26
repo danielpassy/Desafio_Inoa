@@ -34,6 +34,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     "auth_user",
     "core",
+    "django_celery_results",
     "django_extensions",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -85,6 +86,8 @@ DATABASES = {
 }
 
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "pyamqp://guest@localhost//")
+CELERY_RESULT_BACKEND = "django-db"
+CELERY_CACHE_BACKEND = "django-cache"
 
 
 # Password validation

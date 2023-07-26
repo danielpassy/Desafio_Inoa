@@ -399,6 +399,22 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
+name = "django-celery-results"
+version = "2.5.1"
+description = "Celery result backends for Django."
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "django_celery_results-2.5.1-py3-none-any.whl", hash = "sha256:0da4cd5ecc049333e4524a23fcfc3460dfae91aa0a60f1fae4b6b2889c254e01"},
+    {file = "django_celery_results-2.5.1.tar.gz", hash = "sha256:3ecb7147f773f34d0381bac6246337ce4cf88a2ea7b82774ed48e518b67bb8fd"},
+]
+
+[package.dependencies]
+celery = ">=5.2.7,<6.0"
+Django = ">=3.2.18"
+
+[[package]]
 name = "django-extensions"
 version = "3.2.3"
 description = "Extensions for Django"
@@ -1068,4 +1084,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "c527c430a4ca0617f6b8bfc7390aacf3b405c92e4e63d7ab4dd3399addd32ca0"
+content-hash = "f667f999f4de2c48d7678142e42fd7141d82e5fac095e069498a7bdce1080004"
