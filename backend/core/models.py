@@ -8,8 +8,6 @@ class Asset(models.Model):
     short_name = models.TextField()  # "PETROBRAS   PN      N2"
     long_name = models.TextField()  # "Petróleo Brasileiro S.A. - Petrobras"
     symbol = models.TextField()  # "PETR4"
-    start_date = models.DateField(auto_now=True, null=True)
-    interval = models.DurationField(null=True)
 
 
 class UserAlert(models.Model):
@@ -17,6 +15,7 @@ class UserAlert(models.Model):
     inferior_tunel = models.IntegerField()
     superior_tunel = models.IntegerField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    interval = models.DurationField()
 
 
 class Currency(models.TextChoices):
