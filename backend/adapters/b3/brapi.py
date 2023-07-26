@@ -6,7 +6,7 @@ from adapters.b3.typing import time_T
 # https://brapi.dev/docs
 
 
-def available_stocks(search: str) -> dict[str, any]:
+def available_stocks(search: str = None) -> dict[str, any]:
     params = {
         "search": search,
     }
