@@ -15,11 +15,8 @@ services:
     container_name: celery_worker
     volumes:
       - .:/app
-    command: celery --app motorista.celery:app worker -Q motorista,celery --loglevel DEBUG
+    command: celery -A backend worker -l INFO
     depends_on:
       - rabbitmq
     environment:
-      - BROKER_HOST=broker
-      - BROKER_PORT=5672
-      - BROKER_USER=guest
-      - BROKER_PASSWORD=guest
+      - CELERY_BROKER_URL=pyamqp://guest:guest@rabbitmq/
