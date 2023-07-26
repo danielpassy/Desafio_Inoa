@@ -1,12 +1,11 @@
 import datetime
 from django.forms import model_to_dict
 from ninja import NinjaAPI, Schema
-from django.contrib.auth.models import User
 from pydantic import validator
-
+from ninja.security import django_auth
 from core.models import Asset, UserAlert
 
-core_api = NinjaAPI(urls_namespace="core")
+core_api = NinjaAPI(urls_namespace="core", auth=django_auth, csrf=True)
 
 
 class LoginForm(Schema):
@@ -58,15 +57,19 @@ def alerts(request):
     return 200, {"alerts": model_to_dict(alerts)}
 
 
-@core_api.post("/alerts", response={201: dict, 400: dict})
-def create_alerts(request, alert_form: dict):
+class AlertForm(Schema):
+    asset_id: str
+    inferior_tunel: int
+    superior_tunel: int
+    interval: datetime.timedelta
+
+
+@core_api.post("/alerts", response={201: dict, 200: dict})
+def create_alerts(request, data: AlertForm):
     user = request.user
-    alert = UserAlert.objects.filter(asset_id=alert_form.asset_id, user=user).first()
-    if alert:
-        alert(**alert_form.dict()).save()
-        return 200, {"alert": model_to_dict(alert)}
 
-    new_alert = UserAlert(user=user, **alert_form.dict())
-    new_alert.save()
+    alert, created = UserAlert.objects.update_or_create(
+        asset_id=data.asset_id, user=user, defaults=data.dict()
+    )
 
-    return 201, {"alert": model_to_dict(new_alert)}
+    return 201 if created else 200, {"alert": model_to_dict(alert)}
