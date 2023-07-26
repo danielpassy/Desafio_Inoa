@@ -13,6 +13,8 @@ ruff = "^0.0.279"
 black = "^23.7.0"
 pytest-django = "^4.5.2"
 requests = "^2.31.0"
+django-extensions = "^3.2.3"
+ipython = "^8.14.0"
 
 
 [build-system]
