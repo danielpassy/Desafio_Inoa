@@ -20,3 +20,13 @@ services:
       - rabbitmq
     environment:
       - CELERY_BROKER_URL=pyamqp://guest:guest@rabbitmq/
+  beat:
+    build: .
+    container_name: beat
+    volumes:
+      - .:/app
+    command: celery -A backend beat -l INFO
+    depends_on:
+      - rabbitmq
+    environment:
+      - CELERY_BROKER_URL=pyamqp://guest:guest@rabbitmq/
