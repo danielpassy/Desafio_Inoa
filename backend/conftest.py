@@ -1,6 +1,9 @@
 import pytest
 
 from auth_user.models import User
+from backend.celery_settings import celery_instance
+
+celery_instance.conf.task_always_eager = True
 
 
 @pytest.fixture(autouse=True)

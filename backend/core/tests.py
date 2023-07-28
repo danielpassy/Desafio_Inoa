@@ -41,3 +41,7 @@ def test_create_alert(client_with_user):
     assert res.status_code == 201
     assert UserAlert.objects.count() == 1
     assert alert.asset_id == asset.id
+
+
+def test_update_available_stocks():
+    
