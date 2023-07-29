@@ -9,5 +9,7 @@ def available_stocks(search: str = None) -> list[str]:
     return adapter.available_stocks(search)
 
 
-def stock_details(stock, range: time_T, interval: time_T) -> list[dict]:
-    return adapter.stock_details(stock, range, interval)
+def stock_details(
+    stocks: list[str], range: time_T, interval: time_T
+) -> dict[str, dict]:
+    return adapter.stock_details(stocks, range, interval)

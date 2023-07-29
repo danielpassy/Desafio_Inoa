@@ -27,7 +27,7 @@ class AssetRecord(models.Model):
     asset = models.ForeignKey(Asset, on_delete=models.DO_NOTHING)
     price = models.IntegerField()
     currency = models.TextField(choices=Currency.choices)
-    measured_at = models.DateTimeField()
+    measured_at = models.DateTimeField(auto_now_add=True)
 
     class meta:
         orderering = ["-measure_at"]
