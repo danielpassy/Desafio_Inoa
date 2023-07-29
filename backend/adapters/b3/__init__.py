@@ -2,10 +2,10 @@ from importlib import import_module
 from django.conf import settings
 from .typing import time_T
 
-adapter = import_module(settings.B3_ADAPTER)
+adapter = import_module(settings.ADAPTERS["B3"])
 
 
-def available_stocks(search: str = None) -> list[dict]:
+def available_stocks(search: str = None) -> list[str]:
     return adapter.available_stocks(search)
 
 

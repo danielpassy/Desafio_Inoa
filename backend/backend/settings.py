@@ -137,4 +137,4 @@ AUTH_USER_MODEL = "auth_user.User"
 
 # Providers
 SENDGRID_API_KEY = "sdasd"
-B3_ADAPTER = "adapters.b3.brapi"
+ADAPTERS = {"B3": "adapters.b3.brapi_mock"}

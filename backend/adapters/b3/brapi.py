@@ -6,14 +6,14 @@ from adapters.b3.typing import time_T
 # https://brapi.dev/docs
 
 
-def available_stocks(search: str = None) -> dict[str, any]:
+def available_stocks(search: str = None) -> list[str]:
     params = {
         "search": search,
     }
     response = requests.get(f"https://brapi.dev/api/available", params=params)
     response.raise_for_status()
 
-    return response.json()
+    return response.json()["stocks"]
 
 
 def stock_details(stock: list[str], range: time_T, interval: time_T):
