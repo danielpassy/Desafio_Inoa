@@ -4,9 +4,9 @@ from auth_user.models import User
 
 
 class Asset(models.Model):
-    name = models.TextField()
-    short_name = models.TextField()  # "PETROBRAS   PN      N2"
-    long_name = models.TextField()  # "Petróleo Brasileiro S.A. - Petrobras"
+    name = models.TextField(null=True)
+    short_name = models.TextField(null=True)  # "PETROBRAS   PN      N2"
+    long_name = models.TextField(null=True)  # "Petróleo Brasileiro S.A. - Petrobras"
     symbol = models.TextField()  # "PETR4"
 
 

@@ -1,4 +1,5 @@
 from datetime import timedelta
+from core import tasks
 from core.models import Asset, UserAlert
 from core.views import AlertForm
 
@@ -43,5 +44,7 @@ def test_create_alert(client_with_user):
     assert alert.asset_id == asset.id
 
 
-def test_update_available_stocks():
-    
+def test_update_available_stocks(settings):
+    tasks.update_available_stocks()
+
+    assert Asset.objects.count()
