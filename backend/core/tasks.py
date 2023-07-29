@@ -1,7 +1,9 @@
+from celery import shared_task
 from adapters import b3
 from core.models import Asset, AssetRecord
 
 
+@shared_task()
 def update_available_stocks():
     stocks = b3.available_stocks()
     stock_list = []
@@ -14,6 +16,7 @@ def update_available_stocks():
     )
 
 
+@shared_task()
 def update_stock_details():
     stocks = Asset.objects.all()
     stock_details = b3.stock_details(
