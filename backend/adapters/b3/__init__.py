@@ -5,7 +5,7 @@ from .typing import time_T
 adapter = import_module(settings.ADAPTERS["B3"])
 
 
-def available_stocks(search: str = None) -> list[str]:
+def available_stocks(search: str | None = None) -> list[str]:
     return adapter.available_stocks(search)
 
 
