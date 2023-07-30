@@ -16,12 +16,34 @@ As such, the system should periodically record B3's stock prices and warn the in
 3. The user should be able to see the stock price history;
 4. It should email ths user suggesting him to sell if below the minimum price or buy if above the maximum price;
 5. It should be built using Django and Python;
+### Running the Project
+
+To run the project, you need to have Docker, Docker Compose, python and poetry installed.
+
+Then, run the following command:
+```bash
+cd backend
+```
+Install the dependencies
+```bash
+poetry install
+```
+start the containers
+```bash
+docker compose up
+```
+run the migrations and start the development server
+```bash
+./manage.py migrate
+./python manage.py runserver
+```
+
 
 ## Technology overview
 
 The project is built using:
 
-- Python/Django on the Backend
+- Python/Django on the Backend with type anottations
 - React as a SPA on the Frontend
 - PostgreSQL as the database
 - RabbitMQ+Celery as asyncronous task features
@@ -31,9 +53,12 @@ The project is built using:
 #### Discussion on the technology choices
 
 - Django as REST API backend
-- Django Ninja, to provide input validation with Pydantic, OpenAPI documentation and other REST functionalities
+- Django Ninja, which provides:
+    - input validation with Pydantic + type annotations
+    - OpenAPI documentation
+    - Other REST functionalities
 - TDD, with mostly integrations tests.
-- Adapters that are easily replaceable, to allow for easy change of data sources
+- Adapters that are easily replaceable, to allow for easy change of data sources and service providers
 - Celery + RabbitMQ to allow for asyncronous tasks
 - Docker to allow for easy deployment and development
 - Docker compose to allow for better development experience
