@@ -1,5 +1,5 @@
-import App from '@/App';
-import LoginPage from '@/login/login-page';
+import LoginPage from '@/pages/login/login-page';
+import HomePage from '@/pages/home/home-page';
 import { createBrowserRouter } from 'react-router-dom';
 
 export const router = createBrowserRouter([
@@ -8,7 +8,7 @@ export const router = createBrowserRouter([
     element: <LoginPage />,
   },
   {
-    path: '/ok',
-    element: <App />,
+    path: '/',
+    element: <HomePage />,
   },
 ]);
