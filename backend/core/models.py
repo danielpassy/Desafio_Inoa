@@ -7,7 +7,7 @@ class Asset(models.Model):
     name = models.TextField(null=True)
     short_name = models.TextField(null=True)  # "PETROBRAS   PN      N2"
     long_name = models.TextField(null=True)  # "Petróleo Brasileiro S.A. - Petrobras"
-    symbol = models.TextField()  # "PETR4"
+    symbol = models.TextField(unique=True)  # "PETR4"
 
 
 class UserAlert(models.Model):
