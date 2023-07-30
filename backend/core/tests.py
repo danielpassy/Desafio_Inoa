@@ -48,7 +48,8 @@ def test_create_alert_creates_it(client_with_user):
 def test_update_available_stocks_create_asset_entry():
     tasks.update_available_stocks()
 
-    assert Asset.objects.count() == 1
+    # b3 mock return 4 entries
+    assert Asset.objects.count() == 4
 
 
 def test_update_stock_details_create_correct_asset_record():
@@ -68,3 +69,20 @@ def test_update_stock_details_create_correct_asset_record():
     assert records["PETR4"].currency == "BRL"
     assert records["VALE3"].asset == asset_vale3
     assert isinstance(records["PETR4"].price, numbers.Number)
+
+
+def test_get_stock_price_history(client_with_user):
+    record = AssetRecord.objects.create(
+        asset=Asset.objects.create(symbol="PETR4"),
+        price=10,
+        currency="BRL",
+    )
+
+    res = client_with_user.get(
+        f"/api/assets/{record.asset.id}", {"initial_date": "2021-01-01"}
+    )
+    data = res.json()
+
+    assert len(data["records"]) == 1
+    assert data["records"][0]["asset"] == record.asset_id
+    assert data["records"][0]["price"] == record.price

@@ -3,7 +3,7 @@ from django.forms import model_to_dict
 from ninja import NinjaAPI, Schema
 from pydantic import validator
 from ninja.security import django_auth
-from core.models import Asset, UserAlert
+from core.models import Asset, AssetRecord, UserAlert
 
 core_api = NinjaAPI(urls_namespace="core", auth=django_auth, csrf=True)
 
@@ -34,7 +34,7 @@ class AssetFilter(Schema):
 
 
 @core_api.get("/assets", response={200: dict})
-def assets(request, filters: AssetFilter = None):
+def assets(request, filters: AssetFilter | None = None):
     if not filters:
         filters = AssetFilter()
 
@@ -54,7 +54,7 @@ def alerts(request):
     user = request.user
     alerts = UserAlert.objects.filter(user=user)
 
-    return 200, {"alerts": model_to_dict(alerts)}
+    return 200, {"alerts": [model_to_dict(a) for a in alerts]}
 
 
 class AlertForm(Schema):
@@ -73,3 +73,13 @@ def create_alerts(request, data: AlertForm):
     )
 
     return 201 if created else 200, {"alert": model_to_dict(alert)}
+
+
+@core_api.get("/assets/{asset_id}", response={200: dict})
+def asset(request, asset_id: str, initial_date: datetime.date):
+    records = AssetRecord.objects.filter(
+        asset_id=asset_id,
+        measured_at__gte=initial_date,
+    )
+
+    return 200, {"records": [model_to_dict(r) for r in records]}
