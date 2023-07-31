@@ -1,14 +1,17 @@
-import { createContext, useContext, useRef, useState } from 'react';
+import { AlertColor } from '@mui/material/Alert';
+import { ReactNode, createContext, useContext, useRef, useState } from 'react';
 
-export const SnackBarContextProvider = (props: { children: any }) => {
+export const SnackBarContextProvider = (props: { children: ReactNode }) => {
   const [msg, setMsg] = useState('');
+  const [snackType, setSnackType] = useState<AlertColor>('error');
   const refTimer = useRef<number | undefined>(undefined);
 
   const [isDisplayed, setIsDisplayed] = useState(false);
 
-  const displayHandler = (msg: any) => {
+  const displayHandler = (msg: string, type: AlertColor = 'error') => {
     setMsg(msg);
     setIsDisplayed(true);
+    setSnackType(type);
     refTimer.current = window.setTimeout(() => {
       closeHandler();
     }, 5000);
@@ -22,6 +25,7 @@ export const SnackBarContextProvider = (props: { children: any }) => {
     <SnackbarContext.Provider
       value={{
         msg,
+        snackType,
         isDisplayed,
         displayMsg: displayHandler,
         onClose: closeHandler,
@@ -32,12 +36,17 @@ export const SnackBarContextProvider = (props: { children: any }) => {
   );
 };
 
-const SnackbarContext = createContext({
-  msg: '',
-  isDisplayed: false,
-  displayMsg: (msg: string): any => ({}),
-  onClose: (): any => ({}),
-});
+interface SnackbarContextType {
+  msg: string;
+  snackType: AlertColor;
+  isDisplayed: boolean;
+  displayMsg: (msg: string) => void;
+  onClose: () => void;
+}
+
+const SnackbarContext = createContext<SnackbarContextType>(
+  {} as SnackbarContextType,
+);
 
 const useSnackbarContext = () => {
   return useContext(SnackbarContext);

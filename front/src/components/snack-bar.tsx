@@ -13,7 +13,7 @@ export default function SnackBar() {
     >
       <Alert
         onClose={snackBarContext.onClose}
-        severity="error"
+        severity={snackBarContext.snackType}
         sx={{ width: '100%' }}
       >
         {snackBarContext.msg}
