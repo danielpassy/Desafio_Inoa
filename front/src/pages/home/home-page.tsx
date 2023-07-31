@@ -3,26 +3,35 @@ import {
   Box,
   Button,
   Container,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   TextField,
   Typography,
 } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import api from '@/libs/data';
+import useSnackbarContext from '@/context/snack-context';
+import time_svc from '@/pages/home/time_svc';
 
 const allowedIntervals = [
-  { label: '1 minute', value: 1 },
-  { label: '5 minutes', value: 5 },
-  { label: '15 minutes', value: 15 },
-  { label: '30 minutes', value: 30 },
-  { label: '1 hour', value: 60 },
-  { label: '2 hours', value: 120 },
-  { label: '6 hours', value: 360 },
-  { label: '12 hours', value: 720 },
-  { label: '1 day', value: 1440 },
-  { label: '2 days', value: 2880 },
-  { label: '3 days', value: 4320 },
-  { label: '1 week', value: 10080 },
-  { label: '2 weeks', value: 20160 },
+  { label: '1 minute', value: 1 * 60 },
+  { label: '5 minutes', value: 5 * 60 },
+  { label: '15 minutes', value: 15 * 60 },
+  { label: '30 minutes', value: 30 * 60 },
+  { label: '1 hour', value: 60 * 60 },
+  { label: '2 hours', value: 120 * 60 },
+  { label: '6 hours', value: 360 * 60 },
+  { label: '12 hours', value: 720 * 60 },
+  { label: '1 day', value: 1440 * 60 },
+  { label: '2 days', value: 2880 * 60 },
+  { label: '3 days', value: 4320 * 60 },
+  { label: '1 week', value: 10080 * 60 },
+  { label: '2 weeks', value: 20160 * 60 },
 ];
 
 export default function HomePage() {
@@ -32,14 +41,21 @@ export default function HomePage() {
   const [inferiorTunel, setInferiorTunel] = useState<number>(0);
   const [superiorTunel, setSuperiorTunel] = useState<number>(0);
   const [interval, setInterval] = useState(allowedIntervals[0]);
+  const snackbar = useSnackbarContext();
 
   const createAlarm = async () => {
-    const response = await api.stocks.editCreateAlert(
-      selectedAsset.id,
-      inferiorTunel,
-      superiorTunel,
-      interval.value,
-    );
+    try {
+      await api.stocks.editCreateAlert(
+        selectedAsset.id,
+        inferiorTunel,
+        superiorTunel,
+        interval.value,
+      );
+      snackbar.displayMsg('Alert created successfully', 'success');
+      fetchData();
+    } catch {
+      snackbar.displayMsg('Error creating alert');
+    }
   };
 
   const formattedStock = useMemo(
@@ -50,29 +66,33 @@ export default function HomePage() {
       })),
     [stocks],
   );
+  const fetchData = async () => {
+    const [stockData, alertData] = await Promise.all([
+      api.stocks.listAssets(),
+      api.stocks.listAlerts(),
+    ]);
+    setStock(stockData.assets);
+    setAlerts(alertData.alerts);
+    // javascript complains cause is a different object, but it works
+    setSelectedAsset({
+      label: stockData.assets[0].symbol,
+      id: stockData.assets[0].id,
+    });
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      const [stockData, alertData] = await Promise.all([
-        api.stocks.listAssets(),
-        api.stocks.listAlerts(),
-      ]);
-      setStock(stockData.assets);
-      setAlerts(alertData.alerts);
-    };
     fetchData();
   }, []);
 
   return (
     <Container>
-      <Typography variant="h1">Your stocks</Typography>
-      {alerts.map((alert) => (
-        <div key={alert.id}>
-          <Typography variant="h2">{alert.symbol}</Typography>
-          <Typography variant="h3">{alert.price}</Typography>
-        </div>
-      ))}
-      <Typography variant="button">Create Alert</Typography>
+      <Typography variant="h2">Your Alerts</Typography>
+
+      <AlertsTable alerts={alerts} />
+
+      <Box sx={{ m: 3 }} />
+
+      <Typography variant="h2">Create Alert</Typography>
       <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
         <Autocomplete
           value={selectedAsset}
@@ -131,9 +151,59 @@ export default function HomePage() {
           variant="contained"
           sx={{ width: '20%', m: '10px' }}
         >
-          Create Alert
+          {alerts.map((a) => a.asset.id).includes(selectedAsset.id)
+            ? 'Edit Alert'
+            : 'Create Alert'}
         </Button>
       </Box>
     </Container>
+  );
+}
+
+function AlertsTable({ alerts }: { alerts: UserAlert[] }) {
+  return (
+    <TableContainer component={Paper}>
+      <Table
+        sx={{
+          minWidth: 650,
+        }}
+        aria-label="simple table"
+      >
+        <TableHead>
+          <TableRow>
+            <TableCell>Asset </TableCell>
+            <TableCell align="right">Interval</TableCell>
+            <TableCell align="right">Inferior Tunel</TableCell>
+            <TableCell align="right">Superior Tunel</TableCell>
+            <TableCell align="right">Protein&nbsp;(g)</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {alerts.map((alert) => (
+            <TableRow
+              key={alert.id}
+              sx={{
+                '&:last-child td, &:last-child th': {
+                  border: 0,
+                },
+              }}
+            >
+              <TableCell component="th" scope="row">
+                {alert.asset.symbol}
+              </TableCell>
+              <TableCell component="th" scope="row">
+                {time_svc.duration(alert.interval).humanize()}
+              </TableCell>
+              <TableCell component="th" scope="row">
+                {alert.inferior_tunel}
+              </TableCell>
+              <TableCell component="th" scope="row">
+                {alert.superior_tunel}
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 }
