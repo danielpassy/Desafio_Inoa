@@ -34,7 +34,7 @@ class AssetFilter(Schema):
 
 
 @core_api.get("/assets", response={200: dict})
-def assets(request, filters: AssetFilter | None = None):
+def list_assets(request, filters: AssetFilter | None = None):
     if not filters:
         filters = AssetFilter()
 
@@ -50,11 +50,19 @@ def assets(request, filters: AssetFilter | None = None):
 
 
 @core_api.get("/alerts", response={200: dict})
-def alerts(request):
+def list_alerts(request):
     user = request.user
     alerts = UserAlert.objects.filter(user=user)
 
-    return 200, {"alerts": [model_to_dict(a) for a in alerts]}
+    return 200, {
+        "alerts": [
+            {
+                **model_to_dict(a),
+                "asset": {**model_to_dict(a.asset)},
+            }
+            for a in alerts
+        ]
+    }
 
 
 class AlertForm(Schema):
@@ -68,15 +76,20 @@ class AlertForm(Schema):
 def create_alerts(request, data: AlertForm):
     user = request.user
 
-    alert, created = UserAlert.objects.update_or_create(
+    alert, created = UserAlert.objects.select_related("asset").update_or_create(
         asset_id=data.asset_id, user=user, defaults=data.dict()
     )
 
-    return 201 if created else 200, {"alert": model_to_dict(alert)}
+    return 201 if created else 200, {
+        "alert": {
+            "asset": {**model_to_dict(alert.asset)},
+            **model_to_dict(alert),
+        }
+    }
 
 
 @core_api.get("/assets/{asset_id}", response={200: dict})
-def asset(request, asset_id: str, initial_date: datetime.date):
+def get_asset(request, asset_id: str, initial_date: datetime.date):
     records = AssetRecord.objects.filter(
         asset_id=asset_id,
         measured_at__gte=initial_date,
