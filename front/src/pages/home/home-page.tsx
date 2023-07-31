@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Container,
+  IconButton,
   Paper,
   Table,
   TableBody,
@@ -13,6 +14,8 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { Delete, Edit, ShowChart } from '@mui/icons-material';
+
 import { useEffect, useMemo, useState } from 'react';
 import api from '@/libs/data';
 import useSnackbarContext from '@/context/snack-context';
@@ -172,10 +175,10 @@ function AlertsTable({ alerts }: { alerts: UserAlert[] }) {
         <TableHead>
           <TableRow>
             <TableCell>Asset </TableCell>
-            <TableCell align="right">Interval</TableCell>
-            <TableCell align="right">Inferior Tunel</TableCell>
-            <TableCell align="right">Superior Tunel</TableCell>
-            <TableCell align="right">Protein&nbsp;(g)</TableCell>
+            <TableCell>Interval</TableCell>
+            <TableCell>Inferior Tunel</TableCell>
+            <TableCell>Superior Tunel</TableCell>
+            <TableCell>Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -199,6 +202,38 @@ function AlertsTable({ alerts }: { alerts: UserAlert[] }) {
               </TableCell>
               <TableCell component="th" scope="row">
                 {alert.superior_tunel}
+              </TableCell>
+              <TableCell component="th" scope="row">
+                <IconButton
+                  onClick={() => {
+                    console.log('asdasd');
+                  }}
+                  color="inherit"
+                  aria-label="trips"
+                  sx={{ mr: 0 }}
+                >
+                  <Edit />
+                </IconButton>
+                <IconButton
+                  onClick={() => {
+                    console.log('asdasd');
+                  }}
+                  color="inherit"
+                  aria-label="trips"
+                  sx={{ mr: 0 }}
+                >
+                  <Delete />
+                </IconButton>
+                <IconButton
+                  onClick={() => {
+                    console.log('asdasd');
+                  }}
+                  color="inherit"
+                  aria-label="trips"
+                  sx={{ mr: 0 }}
+                >
+                  <ShowChart />
+                </IconButton>
               </TableCell>
             </TableRow>
           ))}
