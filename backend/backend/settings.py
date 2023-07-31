@@ -28,11 +28,15 @@ SECRET_KEY = "django-insecure-^ar)q7!=ovjdm*ft1qdr3m^(f+2ozjyrj832i%(-8m#$(p@yr=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
+ALLOWED_HOSTS = [
+    "localhost:5173",
+    "localhost:8000",
+    "localhost",
 ]
+CSRF_TRUSTED_ORIGINS = ["http://localhost:5173"]
+CORS_ALLOWED_ORIGINS = ["http://localhost:5173"]
+CORS_ALLOW_CREDENTIALS = True
+
 
 # Application definition
 
@@ -144,6 +148,6 @@ AUTH_USER_MODEL = "auth_user.User"
 # Providers
 SENDGRID_API_KEY = "sdasd"
 ADAPTERS = {
-    "B3": "adapters.b3.brapi_mock",
+    "B3": "adapters.b3.brapi",
     "EMAIL": "adapters.email.sendgrid",
 }
