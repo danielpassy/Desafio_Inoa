@@ -1,9 +1,4 @@
-import {
-  Facebook,
-  Google,
-  Visibility,
-  VisibilityOff,
-} from '@mui/icons-material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -64,8 +59,10 @@ export default function LoginPage() {
           sm: '50vw',
           xs: '90vw',
         },
+        display: 'flex',
+        alignItems: 'center',
         margin: 'auto',
-        pt: 3,
+        height: ' 100vh',
       }}
     >
       <Card raised>
@@ -97,38 +94,6 @@ export default function LoginPage() {
           <Box className="py-2" />
 
           {LoginSelected ? <LoginForm /> : <RegisterForm />}
-
-          <Divider sx={{ my: 3 }} />
-
-          <Box sx={{ textAlign: 'center', pb: 3 }}>
-            <Typography variant="subtitle2" component="span">
-              Or Login With
-            </Typography>
-          </Box>
-          <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-            <Button
-              color="primary"
-              variant="contained"
-              sx={{ mx: 'auto', backgroundColor: 'blue' }}
-            >
-              <Google sx={{ mr: 1 }} />
-              Google
-            </Button>
-            <Divider
-              sx={{ mx: 2 }}
-              flexItem
-              orientation="vertical"
-              variant="middle"
-            />
-            <Button
-              color="primary"
-              variant="contained"
-              sx={{ mx: 'auto', backgroundColor: 'light-blue' }}
-            >
-              <Facebook sx={{ mr: 1 }} />
-              Facebook
-            </Button>
-          </Box>
         </CardContent>
       </Card>
     </Box>
@@ -158,13 +123,13 @@ function LoginForm() {
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        className="my-2"
+        sx={{ my: 1.2 }}
         label="Email"
         variant="outlined"
       />
 
       {/* Password */}
-      <FormControl className="my-2" variant="outlined">
+      <FormControl sx={{ my: 1.2 }} variant="outlined">
         <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
         <OutlinedInput
           type={showPassword ? 'text' : 'password'}
@@ -185,7 +150,7 @@ function LoginForm() {
           }
         />
       </FormControl>
-      <Button onClick={submit} className="my-2" variant="outlined">
+      <Button onClick={submit} sx={{ my: 1.2 }} variant="outlined">
         Login
       </Button>
     </>
@@ -218,7 +183,7 @@ function RegisterForm() {
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        className="my-2"
+        sx={{ my: 1.2 }}
         label="Email"
         variant="outlined"
       />
@@ -228,7 +193,7 @@ function RegisterForm() {
         variant="outlined"
         type={showPassword ? 'text' : 'password'}
         label="Password"
-        className="my-2"
+        sx={{ my: 1.2 }}
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         InputProps={{
@@ -249,7 +214,7 @@ function RegisterForm() {
         helperText={passwordsMatch ? null : 'Passwords do not match'}
         type={showPassword ? 'text' : 'password'}
         label="Reapeat Password"
-        className="my-2"
+        sx={{ my: 1.2 }}
         value={repeatPassword}
         onChange={(e) => setRepeatPassword(e.target.value)}
         InputProps={{
@@ -265,7 +230,7 @@ function RegisterForm() {
       <Button
         onClick={submit}
         disabled={!canSubmit}
-        className="my-2"
+        sx={{ my: 1.2 }}
         variant="outlined"
       >
         Register
