@@ -40,7 +40,7 @@ interface SnackbarContextType {
   msg: string;
   snackType: AlertColor;
   isDisplayed: boolean;
-  displayMsg: (msg: string) => void;
+  displayMsg: (msg: string, type?: AlertColor) => void;
   onClose: () => void;
 }
 
