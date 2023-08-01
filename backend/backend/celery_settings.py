@@ -29,7 +29,7 @@ def setup_periodic_tasks(sender, **kwargs):
 @celery_instance.task()
 def update_available_stocks():
     from adapters import b3
-    from core.models import Asset, AssetRecord
+    from core.models import Asset
 
     print("update_available_stocks")
     stocks = b3.available_stocks()
@@ -49,21 +49,20 @@ def update_stock_details():
     from adapters import b3
     from core.models import Asset, AssetRecord
 
-    print("update_stock_details")
-
-    stocks = Asset.objects.all()
+    stocks = Asset.objects.all().in_bulk(field_name="symbol")
     stock_details = b3.stock_details(
-        stocks=[stock.symbol for stock in stocks],
+        stocks=list(stocks.keys()),  # type: ignore
         range="1d",
         interval="1d",
     )
     stock_records = []
-    for stock in stocks:
+    for stock_symbol, price_data in stock_details.items():
         stock_records.append(
             AssetRecord(
-                asset=stock,
-                price=stock_details[stock.symbol]["price"],
-                currency=stock_details[stock.symbol]["currency"],
+                asset=stocks[stock_symbol],
+                price=price_data["price"],
+                currency=price_data["currency"],
             )
         )
+
     AssetRecord.objects.bulk_create(stock_records)

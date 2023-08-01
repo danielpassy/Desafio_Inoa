@@ -1,6 +1,7 @@
 from datetime import timedelta
 import numbers
-from core import tasks
+from backend import celery_settings
+
 from core.models import Asset, AssetRecord, UserAlert
 from core.views import AlertForm
 
@@ -46,7 +47,7 @@ def test_create_alert_creates_it(client_with_user):
 
 
 def test_update_available_stocks_create_asset_entry():
-    tasks.update_available_stocks()
+    celery_settings.update_available_stocks()
 
     # b3 mock return 4 entries
     assert Asset.objects.count() == 4
@@ -60,7 +61,7 @@ def test_update_stock_details_create_correct_asset_record():
         symbol="VALE3",
     )
 
-    tasks.update_stock_details()
+    celery_settings.update_stock_details()
     assetRecords = AssetRecord.objects.select_related("asset").all()
     records = {ar.asset.symbol: ar for ar in assetRecords}
 
