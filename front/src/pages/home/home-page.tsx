@@ -44,6 +44,7 @@ export default function HomePage() {
   const [inferiorTunel, setInferiorTunel] = useState<number>(0);
   const [superiorTunel, setSuperiorTunel] = useState<number>(0);
   const [interval, setInterval] = useState(allowedIntervals[0]);
+  const [lastPrice, setLastPrice] = useState<number>(0);
   const snackbar = useSnackbarContext();
 
   const createAlarm = async () => {
@@ -87,6 +88,19 @@ export default function HomePage() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const getStockPrice = async () => {
+      if (!selectedAsset.id) return;
+
+      const stockPrice = await api.stocks.getAsset(
+        selectedAsset.id,
+        time_svc().subtract(1, 'day').format(),
+      );
+      console.log(stockPrice.records);
+      setLastPrice(stockPrice.records?.[0].price ?? 0);
+    };
+    getStockPrice();
+  }, [selectedAsset]);
   return (
     <Container>
       <Typography variant="h2">Your Alerts</Typography>
@@ -113,7 +127,7 @@ export default function HomePage() {
         <TextField
           sx={{ width: '40%', m: '10px' }}
           disabled={true}
-          value={0}
+          value={lastPrice}
           id="outlined-basic"
           label="current price"
           variant="standard"
