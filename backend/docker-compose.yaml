@@ -32,6 +32,8 @@ services:
       - rabbitmq
     environment:
       - CELERY_BROKER_URL=pyamqp://guest:guest@rabbitmq/
+      - DATABASE_URL=postgres://postgres:postgres@postgres/inoa
+
   beat:
     build: .
     container_name: beat

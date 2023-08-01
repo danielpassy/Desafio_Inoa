@@ -91,6 +91,7 @@ WSGI_APPLICATION = "backend.wsgi.application"
 
 DATABASES = {
     "default": dj_database_url.config(
+        env="DATABASE_URL",
         default="postgres://postgres:postgres@localhost/inoa",
     )
 }
