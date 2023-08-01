@@ -16,13 +16,12 @@ import {
 } from '@mui/material';
 import { Delete, Edit, ShowChart } from '@mui/icons-material';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import api from '@/libs/data';
 import useSnackbarContext from '@/context/snack-context';
 import time_svc from '@/pages/home/time_svc';
 
 const allowedIntervals = [
-  { label: '1 minute', value: 1 * 60 },
   { label: '5 minutes', value: 5 * 60 },
   { label: '15 minutes', value: 15 * 60 },
   { label: '30 minutes', value: 30 * 60 },
@@ -45,7 +44,24 @@ export default function HomePage() {
   const [superiorTunel, setSuperiorTunel] = useState<number>(0);
   const [interval, setInterval] = useState(allowedIntervals[0]);
   const [lastPrice, setLastPrice] = useState<number>(0);
+  const lowestPriceRef = useRef<HTMLInputElement | null>(null);
   const snackbar = useSnackbarContext();
+
+  const editAlert = (alert: UserAlert) => {
+    setSelectedAsset({
+      label: alert.asset.symbol,
+      id: alert.asset.id,
+    });
+    setInferiorTunel(alert.inferior_tunel);
+    setSuperiorTunel(alert.superior_tunel);
+    const durationObj = time_svc.duration(alert.interval);
+    const totalSeconds = durationObj.asSeconds();
+    setInterval(allowedIntervals.find((i) => i.value === totalSeconds)!);
+
+    if (lowestPriceRef.current) {
+      lowestPriceRef.current.focus();
+    }
+  };
 
   const createAlarm = async () => {
     try {
@@ -70,6 +86,7 @@ export default function HomePage() {
       })),
     [stocks],
   );
+
   const fetchData = async () => {
     const [stockData, alertData] = await Promise.all([
       api.stocks.listAssets(),
@@ -101,11 +118,12 @@ export default function HomePage() {
     };
     getStockPrice();
   }, [selectedAsset]);
+
   return (
     <Container>
       <Typography variant="h2">Your Alerts</Typography>
 
-      <AlertsTable alerts={alerts} />
+      <AlertsTable alerts={alerts} editAlert={editAlert} />
 
       <Box sx={{ m: 3 }} />
 
@@ -138,6 +156,7 @@ export default function HomePage() {
           id="outlined-basic"
           label="Lowest Price"
           variant="outlined"
+          inputRef={lowestPriceRef}
           value={inferiorTunel}
           onChange={(e) => setInferiorTunel(Number(e.target.value))}
         />
@@ -177,7 +196,13 @@ export default function HomePage() {
   );
 }
 
-function AlertsTable({ alerts }: { alerts: UserAlert[] }) {
+function AlertsTable({
+  alerts,
+  editAlert,
+}: {
+  alerts: UserAlert[];
+  editAlert: (alert: UserAlert) => void;
+}) {
   return (
     <TableContainer component={Paper}>
       <Table
@@ -220,7 +245,7 @@ function AlertsTable({ alerts }: { alerts: UserAlert[] }) {
               <TableCell component="th" scope="row">
                 <IconButton
                   onClick={() => {
-                    console.log('asdasd');
+                    editAlert(alert);
                   }}
                   color="inherit"
                   aria-label="trips"
