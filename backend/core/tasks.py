@@ -1,9 +1,9 @@
-from celery import shared_task
 from adapters import b3
 from core.models import Asset, AssetRecord
+from backend.celery_settings import celery_instance
 
 
-@shared_task()
+@celery_instance.task()
 def update_available_stocks():
     print("update_available_stocks")
     stocks = b3.available_stocks()
@@ -18,7 +18,7 @@ def update_available_stocks():
     )
 
 
-@shared_task()
+@celery_instance.task()
 def update_stock_details():
     print("update_stock_details")
     stocks = Asset.objects.all()
