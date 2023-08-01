@@ -46,7 +46,8 @@ def _stock_details(
     for stock in response.json()["results"]:
         if not "error" in stock:
             res[stock["symbol"]] = {
-                "price": stock["regularMarketPreviousClose"],
+                # convert to centavos
+                "price": stock["regularMarketPreviousClose"] * 100,
                 "currency": stock["currency"],
             }
     return res
