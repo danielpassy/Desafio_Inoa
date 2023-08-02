@@ -10,6 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+from dotenv import load_dotenv
+
+load_dotenv()
 import os
 from pathlib import Path
 
@@ -151,7 +154,7 @@ AUTH_USER_MODEL = "auth_user.User"
 ADAPTERS_KEY = {
     "EMAIL": {
         "SENDGRID": os.environ.get("SENDGRID_API_KEY"),
-        "MAINGUN": os.environ.get("MAILGUN_API_KEY"),
+        "MAILGUN": os.environ.get("MAILGUN_API_KEY"),
     },
 }
 ADAPTERS = {
