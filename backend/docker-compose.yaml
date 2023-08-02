@@ -1,5 +1,21 @@
 version: '3.1'
 services:
+  api:
+    build: .
+    container_name: api
+    volumes:
+      - .:/app
+    command: ./manage.py runserver 
+    depends_on:
+      - db
+      - rabbitmq
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@postgres/inoa
+      - B3_ADAPTER=adapters.b3.brapi
+      - EMAIL_ADAPTER=adapters.email.sendgrid
+
   rabbitmq:
     image: rabbitmq:management
     container_name: rabbitmq
@@ -33,7 +49,8 @@ services:
     environment:
       - CELERY_BROKER_URL=pyamqp://guest:guest@rabbitmq/
       - DATABASE_URL=postgres://postgres:postgres@postgres/inoa
-
+      - B3_ADAPTER=adapters.b3.brapi
+      - EMAIL_ADAPTER=adapters.email.sendgrid
   beat:
     build: .
     container_name: beat
