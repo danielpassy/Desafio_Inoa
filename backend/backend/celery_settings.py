@@ -4,7 +4,6 @@ import os
 from celery import Celery
 from celery.schedules import crontab
 from django.utils import timezone
-from adapters import email
 
 # Set the default Django settings module for the 'celery' program.
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "backend.settings")
@@ -77,8 +76,9 @@ def warn_user():
     from core.models import UserAlert
     from django.db.models import Max, F
     from core.models import AssetRecord
+    from adapters import email
 
-    alerts = UserAlert.objects.select_related("asset").all()
+    alerts = UserAlert.objects.select_related("asset", "user").all()
     assets_monitored = {a.asset_id for a in alerts}
 
     last_records_for_each_asset = (
@@ -107,9 +107,10 @@ def warn_user():
         should_sell = True if last_record.price > alert.superior_tunel else False
         try:
             email.send_email(
-                alert.user.email,
-                f"Alerta de preço de {alert.asset.symbol}",
-                f"O preço de {alert.asset.symbol} está em {last_record.price}",
+                template="sell_stock" if should_sell else "buy_stock",
+                email=alert.user.email,
+                price=last_record.price,
+                stock_symbol=alert.asset.symbol,
             )
             alert.last_checked = timezone.now()
         except Exception as e:
