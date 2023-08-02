@@ -11,11 +11,13 @@ class Asset(models.Model):
 
 
 class UserAlert(models.Model):
+    asset_id: int
     asset = models.ForeignKey(Asset, on_delete=models.CASCADE)
     inferior_tunel = models.IntegerField()
     superior_tunel = models.IntegerField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     interval = models.DurationField()
+    last_checked = models.DateTimeField()
 
 
 class Currency(models.TextChoices):
