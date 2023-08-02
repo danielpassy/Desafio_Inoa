@@ -1,5 +1,6 @@
 from datetime import timedelta
 import numbers
+from auth_user.models import User
 from backend import celery_settings
 
 from core.models import Asset, AssetRecord, UserAlert
@@ -70,6 +71,26 @@ def test_update_stock_details_create_correct_asset_record():
     assert records["PETR4"].currency == "BRL"
     assert records["VALE3"].asset == asset_vale3
     assert isinstance(records["PETR4"].price, numbers.Number)
+
+
+def test_delete_alert(client_with_user):
+    alert = UserAlert.objects.create(
+        user=User.objects.first(),
+        asset=Asset.objects.create(
+            name="123",
+            short_name="123",
+            long_name="123",
+            symbol="123",
+        ),
+        inferior_tunel=10,
+        superior_tunel=10,
+        interval=timedelta(minutes=10),
+    )
+
+    res = client_with_user.delete(f"/api/alerts/{alert.id}")
+
+    assert res.status_code == 204
+    assert UserAlert.objects.count() == 0
 
 
 def test_get_stock_price_history(client_with_user):

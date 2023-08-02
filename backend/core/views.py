@@ -65,6 +65,19 @@ def list_alerts(request):
     }
 
 
+@core_api.delete("/alerts/{alert_id}", response={204: dict})
+def delete_alert(request, alert_id: int):
+    user = request.user
+    alerts = UserAlert.objects.filter(id=alert_id)
+
+    if not alerts or alerts[0].user != user:
+        return 403, {"error": "User has no permission to delete this alert"}
+
+    alerts[0].delete()
+
+    return 204, {}
+
+
 class AlertForm(Schema):
     asset_id: str
     inferior_tunel: int

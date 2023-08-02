@@ -17,7 +17,7 @@ class UserAlert(models.Model):
     superior_tunel = models.IntegerField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     interval = models.DurationField()
-    last_checked = models.DateTimeField()
+    last_checked = models.DateTimeField(null=True)
 
 
 class Currency(models.TextChoices):
