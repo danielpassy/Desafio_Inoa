@@ -8,12 +8,11 @@ adapter = import_module(settings.ADAPTERS["EMAIL"])
 def send_email(
     template: email_template_T,
     email: str,
-    person_email: str,
     price: float,
     stock_symbol: str,
 ):
     msg = available_templates[template].format(
-        person_email=person_email,
+        person_email=email,
         price=price,
         stock_symbol=stock_symbol,
     )
