@@ -146,8 +146,15 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "auth_user.User"
 
+DOMAIN = os.environ.get("DOMAIN", "http://localhost:5173")
+
 # Providers
-SENDGRID_API_KEY = "sdasd"
+ADAPTERS_KEY = {
+    "EMAIL": {
+        "SENDGRID_API_KEY": "SENDGRID_API_KEY",
+        "MAINGUN": os.environ.get("MAILGUN_API_KEY"),
+    },
+}
 ADAPTERS = {
     "B3": "adapters.b3.brapi",
     "EMAIL": "adapters.email.sendgrid",

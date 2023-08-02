@@ -944,6 +944,18 @@ files = [
 six = ">=1.5"
 
 [[package]]
+name = "python-http-client"
+version = "3.3.7"
+description = "HTTP REST client, simplified for Python"
+category = "main"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+files = [
+    {file = "python_http_client-3.3.7-py3-none-any.whl", hash = "sha256:ad371d2bbedc6ea15c26179c6222a78bc9308d272435ddf1d5c84f068f249a36"},
+    {file = "python_http_client-3.3.7.tar.gz", hash = "sha256:bf841ee45262747e00dec7ee9971dfb8c7d83083f5713596488d67739170cea0"},
+]
+
+[[package]]
 name = "requests"
 version = "2.31.0"
 description = "Python HTTP for Humans."
@@ -993,6 +1005,22 @@ files = [
 ]
 
 [[package]]
+name = "sendgrid"
+version = "6.10.0"
+description = "Twilio SendGrid library for Python"
+category = "main"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+files = [
+    {file = "sendgrid-6.10.0-py3-none-any.whl", hash = "sha256:522b30fc98306496208c5d8bdd5642cd6a2fd65cad487475f57f9098ce880604"},
+    {file = "sendgrid-6.10.0.tar.gz", hash = "sha256:9b15050c6f8826ee576f76a786efb15d956639f485478cbddd79ed69e8350ab8"},
+]
+
+[package.dependencies]
+python-http-client = ">=3.2.1"
+starkbank-ecdsa = ">=2.0.1"
+
+[[package]]
 name = "six"
 version = "1.16.0"
 description = "Python 2 and 3 compatibility utilities"
@@ -1040,6 +1068,17 @@ pure-eval = "*"
 
 [package.extras]
 tests = ["cython", "littleutils", "pygments", "pytest", "typeguard"]
+
+[[package]]
+name = "starkbank-ecdsa"
+version = "2.2.0"
+description = "A lightweight and fast pure python ECDSA library"
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "starkbank-ecdsa-2.2.0.tar.gz", hash = "sha256:9399c3371b899d4a235b68a1ed7919d202fbf024bd2c863ae8ebdad343c2a63a"},
+]
 
 [[package]]
 name = "tomli"
@@ -1138,4 +1177,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "110b95839d118c9e2e5e72ec243d8419d0383b3087d4d198593ebbf3f6b1aae7"
+content-hash = "90c795486ccdfef357f0280752c517e36d7428b7df379385030be72b20e24c47"
