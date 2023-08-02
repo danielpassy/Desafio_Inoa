@@ -63,6 +63,16 @@ export default function HomePage() {
     }
   };
 
+  const deleteAlert = async (alert: UserAlert) => {
+    try {
+      await api.stocks.deleteAlert(alert.id);
+      snackbar.displayMsg('Alert deleted successfully', 'success');
+      fetchData();
+    } catch {
+      snackbar.displayMsg('Error deleting alert', 'error');
+    }
+  };
+
   const createAlarm = async () => {
     try {
       await api.stocks.editCreateAlert(
@@ -123,7 +133,11 @@ export default function HomePage() {
     <Container>
       <Typography variant="h2">Your Alerts</Typography>
 
-      <AlertsTable alerts={alerts} editAlert={editAlert} />
+      <AlertsTable
+        alerts={alerts}
+        editAlert={editAlert}
+        deleteAlert={deleteAlert}
+      />
 
       <Box sx={{ m: 3 }} />
 
@@ -199,9 +213,11 @@ export default function HomePage() {
 function AlertsTable({
   alerts,
   editAlert,
+  deleteAlert,
 }: {
   alerts: UserAlert[];
   editAlert: (alert: UserAlert) => void;
+  deleteAlert: (alert: UserAlert) => void;
 }) {
   return (
     <TableContainer component={Paper}>
@@ -255,7 +271,7 @@ function AlertsTable({
                 </IconButton>
                 <IconButton
                   onClick={() => {
-                    console.log('asdasd');
+                    deleteAlert(alert);
                   }}
                   color="inherit"
                   aria-label="trips"
