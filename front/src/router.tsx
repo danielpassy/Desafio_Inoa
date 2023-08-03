@@ -1,6 +1,7 @@
 import LoginPage from '@/pages/login/login-page';
 import HomePage from '@/pages/home/home-page';
 import { createBrowserRouter } from 'react-router-dom';
+import AuthGuardMiddleware from '@/middleware/auth-guard-middleware';
 
 export const router = createBrowserRouter([
   {
@@ -9,6 +10,10 @@ export const router = createBrowserRouter([
   },
   {
     path: '/',
-    element: <HomePage />,
+    element: (
+      <AuthGuardMiddleware>
+        <HomePage />
+      </AuthGuardMiddleware>
+    ),
   },
 ]);
