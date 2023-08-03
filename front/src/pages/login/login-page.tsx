@@ -19,30 +19,6 @@ import useAuthContext from '@/context/auth-context';
 import useSnackbarContext from '@/context/snack-context';
 import { useNavigate } from 'react-router-dom';
 
-function SelectableTitle({
-  title,
-  LoginSelected,
-  setLoginSelected,
-}: {
-  title: string;
-  LoginSelected: boolean;
-  setLoginSelected: (x: boolean) => void;
-}) {
-  return (
-    <Typography
-      sx={{
-        cursor: 'pointer',
-      }}
-      component={'span'}
-      variant="h6"
-      className={LoginSelected ? 'font-light' : 'font-semibold'}
-      onClick={() => setLoginSelected(false)}
-    >
-      {title}
-    </Typography>
-  );
-}
-
 export default function LoginPage() {
   const [LoginSelected, setLoginSelected] = useState(true);
   const centerFlex = {
@@ -97,6 +73,29 @@ export default function LoginPage() {
         </CardContent>
       </Card>
     </Box>
+  );
+}
+function SelectableTitle({
+  title,
+  LoginSelected,
+  setLoginSelected,
+}: {
+  title: string;
+  LoginSelected: boolean;
+  setLoginSelected: (x: boolean) => void;
+}) {
+  return (
+    <Typography
+      sx={{
+        cursor: 'pointer',
+      }}
+      component={'span'}
+      variant="h6"
+      className={LoginSelected ? 'font-light' : 'font-semibold'}
+      onClick={() => setLoginSelected(false)}
+    >
+      {title}
+    </Typography>
   );
 }
 
