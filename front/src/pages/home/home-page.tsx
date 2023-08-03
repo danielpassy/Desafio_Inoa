@@ -17,7 +17,7 @@ import {
 import { Delete, Edit, ShowChart } from '@mui/icons-material';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import api from '@/libs/data';
+import api from '@api';
 import useSnackbarContext from '@/context/snack-context';
 import time_svc from '@/pages/home/time_svc';
 

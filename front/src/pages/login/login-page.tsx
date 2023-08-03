@@ -14,7 +14,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
-import api from '@/libs/data';
+import api from '@api';
 import useAuthContext from '@/context/auth-context';
 import useSnackbarContext from '@/context/snack-context';
 import { useNavigate } from 'react-router-dom';
