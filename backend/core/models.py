@@ -26,6 +26,7 @@ class Currency(models.TextChoices):
 
 
 class AssetRecord(models.Model):
+    asset_id: int
     asset = models.ForeignKey(Asset, on_delete=models.DO_NOTHING)
     price = models.IntegerField()
     currency = models.TextField(choices=Currency.choices)
