@@ -3,24 +3,16 @@ import {
   Box,
   Button,
   Container,
-  IconButton,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   TextField,
   Typography,
 } from '@mui/material';
-import { Delete, Edit, ShowChart } from '@mui/icons-material';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import api from '@api';
 import useSnackbarContext from '@/context/snack-context';
-import time_svc from '@/pages/home/time_svc';
 import { useNavigate } from 'react-router-dom';
+import { AlertsTable } from './alerts-table';
+import time_svc from '@/libs/time_svc';
 
 const allowedIntervals = [
   { label: '5 minutes', value: 5 * 60 },
@@ -38,6 +30,7 @@ const allowedIntervals = [
 ];
 
 type selectedAsset = { label: string; id: number };
+
 export default function HomePage() {
   const [alerts, setAlerts] = useState<UserAlert[]>([]);
   const [stocks, setStock] = useState<Asset[]>([]);
@@ -78,11 +71,7 @@ export default function HomePage() {
     }
   };
 
-  const viewAsset = async (asset: Asset) => {
-    navigator(`/asset/${asset.id}`);
-  };
-
-  const createAlarm = async () => {
+  const createAlert = async () => {
     try {
       await api.stocks.editCreateAlert(
         selectedAsset.id,
@@ -95,6 +84,10 @@ export default function HomePage() {
     } catch {
       snackbar.displayMsg('Error creating alert');
     }
+  };
+
+  const viewAsset = async (asset: Asset) => {
+    navigator(`/asset/${asset.id}`);
   };
 
   const formattedStock = useMemo(
@@ -113,7 +106,6 @@ export default function HomePage() {
     ]);
     setStock(stockData.assets);
     setAlerts(alertData.alerts);
-    // javascript complains cause is a different object, but it works
     setSelectedAsset({
       label: stockData.assets[0].symbol,
       id: stockData.assets[0].id,
@@ -151,160 +143,150 @@ export default function HomePage() {
       <Box sx={{ m: 3 }} />
 
       <Typography variant="h2">Create Alert</Typography>
-      <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
-        <Autocomplete
-          value={selectedAsset}
-          onChange={(_, newValue) => {
-            setSelectedAsset(newValue!);
-          }}
-          clearIcon={null}
-          disablePortal
-          options={formattedStock}
-          sx={{ width: '40%', m: '10px' }}
-          renderInput={(params) => (
-            <TextField {...params} label="Stock Symbol" />
-          )}
-        />
-        <TextField
-          sx={{ width: '40%', m: '10px' }}
-          disabled={true}
-          value={lastPrice}
-          id="outlined-basic"
-          label="current price"
-          variant="standard"
-        />
 
-        <TextField
-          sx={{ width: '40%', m: '10px' }}
-          id="outlined-basic"
-          label="Lowest Price"
-          variant="outlined"
-          inputRef={lowestPriceRef}
-          value={inferiorTunel}
-          onChange={(e) => setInferiorTunel(Number(e.target.value))}
-        />
-        <TextField
-          sx={{ width: '40%', m: '10px' }}
-          id="outlined-basic"
-          label="Higher Price"
-          variant="outlined"
-          value={superiorTunel}
-          onChange={(e) => setSuperiorTunel(Number(e.target.value))}
-        />
-        <Autocomplete
-          value={interval}
-          onChange={(_, newValue) => {
-            setInterval(newValue!);
-          }}
-          clearIcon={null}
-          id="combo-box-demo"
-          options={allowedIntervals}
-          sx={{ width: '65%', m: '10px' }}
-          renderInput={(params) => (
-            <TextField {...params} label="Checkin interval" />
-          )}
-        />
-        <Button
-          onClick={createAlarm}
-          disabled={inferiorTunel === 0 && superiorTunel === 0}
-          variant="contained"
-          sx={{ width: '20%', m: '10px' }}
-        >
-          {alerts.map((a) => a.asset.id).includes(selectedAsset.id)
+      <EditAlertsForm
+        submitButtonText={
+          alerts.map((a) => a.asset.id).includes(selectedAsset.id)
             ? 'Edit Alert'
-            : 'Create Alert'}
-        </Button>
-      </Box>
+            : 'Create Alert'
+        }
+        selectedAsset={selectedAsset}
+        inferiorTunel={inferiorTunel}
+        superiorTunel={superiorTunel}
+        lastPrice={lastPrice}
+        interval={interval}
+        setSelectedAsset={setSelectedAsset}
+        setInferiorTunel={setInferiorTunel}
+        setSuperiorTunel={setSuperiorTunel}
+        setInterval={setInterval}
+        createAlarm={createAlert}
+        lowestPriceRef={lowestPriceRef}
+        formattedStock={formattedStock}
+        submitFormDisabled={inferiorTunel === 0 && superiorTunel === 0}
+      />
     </Container>
   );
 }
 
-function AlertsTable({
-  alerts,
-  editAlert,
-  deleteAlert,
-  viewAsset,
+function EditAlertsForm({
+  submitButtonText,
+  selectedAsset,
+  inferiorTunel,
+  setSelectedAsset,
+  setInferiorTunel,
+  setSuperiorTunel,
+  setInterval,
+  createAlarm,
+  submitFormDisabled,
+  superiorTunel,
+  interval,
+  lastPrice,
+  lowestPriceRef,
+  formattedStock,
 }: {
-  alerts: UserAlert[];
-  editAlert: (alert: UserAlert) => void;
-  deleteAlert: (alert: UserAlert) => void;
-  viewAsset: (asset: Asset) => void;
+  submitButtonText: string;
+  selectedAsset: selectedAsset;
+  setSelectedAsset: (selectedAsset: selectedAsset) => void;
+  inferiorTunel: number;
+  setInferiorTunel: (inferiorTunel: number) => void;
+  submitFormDisabled: boolean;
+  superiorTunel: number;
+  setSuperiorTunel: (superiorTunel: number) => void;
+  interval: (typeof allowedIntervals)[0];
+  setInterval: (interval: (typeof allowedIntervals)[0]) => void;
+  lastPrice: number;
+  lowestPriceRef: React.MutableRefObject<HTMLInputElement | null>;
+  createAlarm: () => void;
+  formattedStock: selectedAsset;
 }) {
   return (
-    <TableContainer component={Paper}>
-      <Table
-        sx={{
-          minWidth: 650,
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+      }}
+    >
+      <Autocomplete
+        value={selectedAsset}
+        onChange={(_, newValue) => {
+          setSelectedAsset(newValue!);
         }}
-        aria-label="simple table"
+        clearIcon={null}
+        disablePortal
+        options={formattedStock}
+        sx={{
+          width: '40%',
+          m: '10px',
+        }}
+        renderInput={(params) => <TextField {...params} label="Stock Symbol" />}
+      />
+
+      <TextField
+        sx={{
+          width: '40%',
+          m: '10px',
+        }}
+        disabled={true}
+        value={lastPrice}
+        id="outlined-basic"
+        label="current price"
+        variant="standard"
+      />
+
+      <TextField
+        sx={{
+          width: '40%',
+          m: '10px',
+        }}
+        id="outlined-basic"
+        label="Lowest Price"
+        variant="outlined"
+        inputRef={lowestPriceRef}
+        value={inferiorTunel}
+        onChange={(e) => setInferiorTunel(Number(e.target.value))}
+      />
+
+      <TextField
+        sx={{
+          width: '40%',
+          m: '10px',
+        }}
+        id="outlined-basic"
+        label="Higher Price"
+        variant="outlined"
+        value={superiorTunel}
+        onChange={(e) => setSuperiorTunel(Number(e.target.value))}
+      />
+
+      <Autocomplete
+        value={interval}
+        onChange={(_, newValue) => {
+          setInterval(newValue!);
+        }}
+        clearIcon={null}
+        id="combo-box-demo"
+        options={allowedIntervals}
+        sx={{
+          width: '65%',
+          m: '10px',
+        }}
+        renderInput={(params) => (
+          <TextField {...params} label="Checkin interval" />
+        )}
+      />
+
+      <Button
+        onClick={createAlarm}
+        disabled={submitFormDisabled}
+        variant="contained"
+        sx={{
+          width: '20%',
+          m: '10px',
+        }}
       >
-        <TableHead>
-          <TableRow>
-            <TableCell>Asset </TableCell>
-            <TableCell>Interval</TableCell>
-            <TableCell>Inferior Tunel</TableCell>
-            <TableCell>Superior Tunel</TableCell>
-            <TableCell>Actions</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {alerts.map((alert) => (
-            <TableRow
-              key={alert.id}
-              sx={{
-                '&:last-child td, &:last-child th': {
-                  border: 0,
-                },
-              }}
-            >
-              <TableCell component="th" scope="row">
-                {alert.asset.symbol}
-              </TableCell>
-              <TableCell component="th" scope="row">
-                {time_svc.duration(alert.interval).humanize()}
-              </TableCell>
-              <TableCell component="th" scope="row">
-                {alert.inferior_tunel}
-              </TableCell>
-              <TableCell component="th" scope="row">
-                {alert.superior_tunel}
-              </TableCell>
-              <TableCell component="th" scope="row">
-                <IconButton
-                  onClick={() => {
-                    editAlert(alert);
-                  }}
-                  color="inherit"
-                  aria-label="trips"
-                  sx={{ mr: 0 }}
-                >
-                  <Edit />
-                </IconButton>
-                <IconButton
-                  onClick={() => {
-                    deleteAlert(alert);
-                  }}
-                  color="inherit"
-                  aria-label="trips"
-                  sx={{ mr: 0 }}
-                >
-                  <Delete />
-                </IconButton>
-                <IconButton
-                  onClick={() => {
-                    viewAsset(alert.asset);
-                  }}
-                  color="inherit"
-                  aria-label="trips"
-                  sx={{ mr: 0 }}
-                >
-                  <ShowChart />
-                </IconButton>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+        {submitButtonText}
+      </Button>
+    </Box>
   );
 }
