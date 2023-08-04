@@ -5,7 +5,7 @@ services:
     container_name: api
     volumes:
       - .:/app
-    command: ./manage.py runserver   0.0.0.0:8000
+    command: sh -c "./manage.py migrate && ./manage.py runserver 0.0.0.0:8000"
     depends_on:
       - db
       - rabbitmq
