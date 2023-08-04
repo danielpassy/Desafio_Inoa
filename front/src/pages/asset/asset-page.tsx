@@ -60,7 +60,7 @@ export default function AssetPage() {
                   {time_svc(record.measured_at).format('HH:mm DD/MM/YYYY')}
                 </TableCell>
                 <TableCell component="th" scope="row">
-                  {`${record.currency} ${record.price * 100}`}
+                  {`${record.currency} ${record.price / 100}`}
                 </TableCell>
               </TableRow>
             ))}
