@@ -132,7 +132,6 @@ export default function HomePage() {
         String(selectedAsset.id),
         time_svc().subtract(1, 'day').format(),
       );
-      console.log(stockPrice.records);
       setLastPrice(stockPrice.records?.[0].price / 100 ?? 0); // centavo to reais
     };
     getStockPrice();
