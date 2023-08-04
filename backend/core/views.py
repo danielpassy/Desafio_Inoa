@@ -103,9 +103,20 @@ def create_alerts(request, data: AlertForm):
 
 @core_api.get("/assets/{asset_id}", response={200: dict})
 def get_asset(request, asset_id: str, initial_date: str):
-    records = AssetRecord.objects.filter(
+    records = AssetRecord.objects.select_related("asset").filter(
         asset_id=asset_id,
         measured_at__gte=initial_date,
     )
-
-    return 200, {"records": [model_to_dict(r) for r in records]}
+    serialized_records = [
+        {
+            "asset": r.asset_id,
+            "price": r.price,
+            "currency": r.currency,
+            "measured_at": r.measured_at,
+        }
+        for r in records
+    ]
+    return 200, {
+        "records": serialized_records,
+        "asset": {**model_to_dict(records[0].asset)},
+    }
