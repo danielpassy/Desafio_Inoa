@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import api from '@api';
-import useAuthContext from '@/context/auth-context';
+import useAuth from '@/context/auth-context';
 import useSnackbarContext from '@/context/snack-context';
 import { useNavigate } from 'react-router-dom';
 
@@ -103,14 +103,14 @@ function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const authContext = useAuthContext();
+  const authContext = useAuth();
   const snackbar = useSnackbarContext();
   const navigate = useNavigate();
 
   const submit = async () => {
     try {
       const user = await api.auth.login(email, password);
-      authContext.setUser(user);
+      authContext.login(user);
       navigate('/');
     } catch (err: any) {
       snackbar.displayMsg(err.response.data.message);
