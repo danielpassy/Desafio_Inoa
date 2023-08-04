@@ -20,6 +20,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import api from '@api';
 import useSnackbarContext from '@/context/snack-context';
 import time_svc from '@/pages/home/time_svc';
+import { useNavigate } from 'react-router-dom';
 
 const allowedIntervals = [
   { label: '5 minutes', value: 5 * 60 },
@@ -36,16 +37,20 @@ const allowedIntervals = [
   { label: '2 weeks', value: 20160 * 60 },
 ];
 
+type selectedAsset = { label: string; id: number };
 export default function HomePage() {
   const [alerts, setAlerts] = useState<UserAlert[]>([]);
   const [stocks, setStock] = useState<Asset[]>([]);
-  const [selectedAsset, setSelectedAsset] = useState<object>({});
+  const [selectedAsset, setSelectedAsset] = useState<selectedAsset>(
+    {} as selectedAsset,
+  );
   const [inferiorTunel, setInferiorTunel] = useState<number>(0);
   const [superiorTunel, setSuperiorTunel] = useState<number>(0);
   const [interval, setInterval] = useState(allowedIntervals[0]);
   const [lastPrice, setLastPrice] = useState<number>(0);
   const lowestPriceRef = useRef<HTMLInputElement | null>(null);
   const snackbar = useSnackbarContext();
+  const navigator = useNavigate();
 
   const editAlert = (alert: UserAlert) => {
     setSelectedAsset({
@@ -54,8 +59,8 @@ export default function HomePage() {
     });
     setInferiorTunel(alert.inferior_tunel);
     setSuperiorTunel(alert.superior_tunel);
-    const durationObj = time_svc.duration(alert.interval);
-    const totalSeconds = durationObj.asSeconds();
+    const AlertInterval = time_svc.duration(alert.interval);
+    const totalSeconds = AlertInterval.asSeconds();
     setInterval(allowedIntervals.find((i) => i.value === totalSeconds)!);
 
     if (lowestPriceRef.current) {
@@ -71,6 +76,10 @@ export default function HomePage() {
     } catch {
       snackbar.displayMsg('Error deleting alert', 'error');
     }
+  };
+
+  const viewAsset = async (asset: Asset) => {
+    navigator(`/asset/${asset.id}`);
   };
 
   const createAlarm = async () => {
@@ -120,7 +129,7 @@ export default function HomePage() {
       if (!selectedAsset.id) return;
 
       const stockPrice = await api.stocks.getAsset(
-        selectedAsset.id,
+        String(selectedAsset.id),
         time_svc().subtract(1, 'day').format(),
       );
       console.log(stockPrice.records);
@@ -137,6 +146,7 @@ export default function HomePage() {
         alerts={alerts}
         editAlert={editAlert}
         deleteAlert={deleteAlert}
+        viewAsset={viewAsset}
       />
 
       <Box sx={{ m: 3 }} />
@@ -214,10 +224,12 @@ function AlertsTable({
   alerts,
   editAlert,
   deleteAlert,
+  viewAsset,
 }: {
   alerts: UserAlert[];
   editAlert: (alert: UserAlert) => void;
   deleteAlert: (alert: UserAlert) => void;
+  viewAsset: (asset: Asset) => void;
 }) {
   return (
     <TableContainer component={Paper}>
@@ -281,7 +293,7 @@ function AlertsTable({
                 </IconButton>
                 <IconButton
                   onClick={() => {
-                    console.log('asdasd');
+                    viewAsset(alert.asset);
                   }}
                   color="inherit"
                   aria-label="trips"

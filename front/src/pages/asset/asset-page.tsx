@@ -10,11 +10,12 @@ export default function AssetPage() {
   useEffect(() => {
     const getAssetInfo = async () => {
       const response = await api.stocks.getAsset(
-        assetId as string,
+        assetId!,
         time_svc().subtract(90, 'day'),
       );
       setAssetRecords(response.records);
     };
+    getAssetInfo();
   });
   return <div>{JSON.stringify(assetRecords)}</div>;
 }
