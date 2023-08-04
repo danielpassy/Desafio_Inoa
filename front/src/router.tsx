@@ -18,7 +18,7 @@ export const router = createBrowserRouter([
     ),
   },
   {
-    path: '/asset/:id',
+    path: '/asset/:assetId',
     element: (
       <AuthGuardMiddleware>
         <AssetPage />
