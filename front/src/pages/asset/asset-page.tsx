@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import api from '@api';
 import time_svc from '@/pages/home/time_svc';
 import {
+  Button,
   Container,
   Paper,
   Table,
@@ -18,6 +19,7 @@ export default function AssetPage() {
   const [assetRecords, setAssetRecords] = useState<AssetRecord[]>([]);
   const [asset, setAsset] = useState<Asset | null>(null);
   const { assetId } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getAssetInfo = async () => {
@@ -33,6 +35,9 @@ export default function AssetPage() {
   return (
     <Container>
       <Typography variant="h2">Records of {asset?.symbol}</Typography>
+      <Button variant="text" onClick={() => navigate(-1)}>
+        Back
+      </Button>
       <TableContainer component={Paper}>
         <Table
           sx={{
