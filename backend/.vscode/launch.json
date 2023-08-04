@@ -16,13 +16,24 @@
             "justMyCode": false
         },
         {
-          "name": "Pytest",
-          "request": "launch",
-          "module": "pytest",
-          "type": "python",
-          "cwd": "${fileDirname}",
-          "justMyCode": false,
-          "args": ["${fileBasename}"]
+            "name": "Pytest",
+            "request": "launch",
+            "module": "pytest",
+            "type": "python",
+            "cwd": "${fileDirname}",
+            "justMyCode": false,
+            "args": [
+                "${fileBasename}"
+            ]
         },
+        {
+            "name": "Celery Beat",
+            "type": "python",
+            "request": "launch",
+            "module": "celery",
+            "justMyCode": false,
+            "args": ["-A", "backend", "beat", "-l", "INFO"],
+            "console": "integratedTerminal"
+        }
     ]
 }
