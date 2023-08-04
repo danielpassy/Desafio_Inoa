@@ -15,8 +15,8 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import api from '@api';
-import useAuth from '@/context/auth-context';
-import useSnackbarContext from '@/context/snack-context';
+import useAuth from '@/hooks/auth-context';
+import useSnackbar from '@/hooks/snack-context';
 import { useNavigate } from 'react-router-dom';
 
 export default function LoginPage() {
@@ -104,7 +104,7 @@ function LoginForm() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const authContext = useAuth();
-  const snackbar = useSnackbarContext();
+  const snackbar = useSnackbar();
   const navigate = useNavigate();
 
   const submit = async () => {

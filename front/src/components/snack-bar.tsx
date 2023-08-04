@@ -1,8 +1,8 @@
-import useSnackbarContext from '@/context/snack-context';
+import useSnackbar from '@/hooks/snack-context';
 import { Snackbar, Alert } from '@mui/material';
 
 export default function SnackBar() {
-  const snackBarContext = useSnackbarContext();
+  const snackBarContext = useSnackbar();
 
   return (
     <Snackbar

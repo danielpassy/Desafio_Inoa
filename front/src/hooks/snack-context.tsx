@@ -1,6 +1,18 @@
 import { AlertColor } from '@mui/material/Alert';
 import { ReactNode, createContext, useContext, useRef, useState } from 'react';
 
+interface SnackbarContextType {
+  msg: string;
+  snackType: AlertColor;
+  isDisplayed: boolean;
+  displayMsg: (msg: string, type?: AlertColor) => void;
+  onClose: () => void;
+}
+
+const SnackbarContext = createContext<SnackbarContextType>(
+  {} as SnackbarContextType,
+);
+
 export const SnackBarContextProvider = (props: { children: ReactNode }) => {
   const [msg, setMsg] = useState('');
   const [snackType, setSnackType] = useState<AlertColor>('error');
@@ -36,19 +48,7 @@ export const SnackBarContextProvider = (props: { children: ReactNode }) => {
   );
 };
 
-interface SnackbarContextType {
-  msg: string;
-  snackType: AlertColor;
-  isDisplayed: boolean;
-  displayMsg: (msg: string, type?: AlertColor) => void;
-  onClose: () => void;
-}
-
-const SnackbarContext = createContext<SnackbarContextType>(
-  {} as SnackbarContextType,
-);
-
-const useSnackbarContext = () => {
+const useSnackbar = () => {
   return useContext(SnackbarContext);
 };
-export default useSnackbarContext;
+export default useSnackbar;

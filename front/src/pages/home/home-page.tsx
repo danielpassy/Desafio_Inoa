@@ -9,7 +9,7 @@ import {
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import api from '@api';
-import useSnackbarContext from '@/context/snack-context';
+import useSnackbar from '@/hooks/snack-context';
 import { useNavigate } from 'react-router-dom';
 import { AlertsTable } from './alerts-table';
 import time_svc from '@/libs/time_svc';
@@ -42,7 +42,7 @@ export default function HomePage() {
   const [interval, setInterval] = useState(allowedIntervals[0]);
   const [lastPrice, setLastPrice] = useState<number>(0);
   const lowestPriceRef = useRef<HTMLInputElement | null>(null);
-  const snackbar = useSnackbarContext();
+  const snackbar = useSnackbar();
   const navigator = useNavigate();
 
   const editAlert = (alert: UserAlert) => {
