@@ -16,27 +16,29 @@ As such, the system should periodically record B3's stock prices and warn the in
 3. The user should be able to see the stock price history;
 4. It should email ths user suggesting him to sell if below the minimum price or buy if above the maximum price;
 5. It should be built using Django and Python;
+
 ### Running the Project
 
-To run the project, you need to have Docker, Docker Compose, python and poetry installed.
+To run the project, you need to have Docker, Docker Compose, Node. For you to receive an emial, you need either SENDGRID or MAILGUN API keys.
 
-Then, run the following command:
+Create an .env file and add the API key (skip if you don't want to receive emails)
 ```bash
 cd backend
+cp .env.example .env
 ```
-Install the dependencies
-```bash
-poetry install
-```
-start the containers
+
+
+Initialize backend services:
 ```bash
 docker compose up
 ```
-run the migrations and start the development server
+Install frontend dependencies and run dev server
 ```bash
-./manage.py migrate
-./python manage.py runserver
+cd ../front
+npm install
+npx vite
 ```
+
 
 
 ## Technology overview
@@ -79,3 +81,6 @@ The project is built using:
 
 <b>Q</b>: Why PostgreSQL?<br>
 <b>A</b>: It's definitely not the best fit for time series data. I'd use InfluxDB, Cassandra or other Time series db. But It would require much more studying as I'm not familiar with those DBs. With more time, it would be one of the top priorities.
+
+<b>Q</b>: The B3 data it's incomplete, it returned only the closing value, why?<br>
+<b>A</b>: I choosed an API that was easy to use and had a free tier. It was late in the development cycle that I finally understood that the API functionalities were lacking.
