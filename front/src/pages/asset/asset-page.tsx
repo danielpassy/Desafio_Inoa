@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import api from '@api';
-import time_svc from '@/pages/home/time_svc';
 import {
   Button,
   Container,
@@ -14,6 +13,7 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
+import time_svc from '@/libs/time_svc';
 
 export default function AssetPage() {
   const [assetRecords, setAssetRecords] = useState<AssetRecord[]>([]);
@@ -35,9 +35,11 @@ export default function AssetPage() {
   return (
     <Container>
       <Typography variant="h2">Records of {asset?.symbol}</Typography>
+
       <Button variant="text" onClick={() => navigate(-1)}>
         Back
       </Button>
+
       <TableContainer component={Paper}>
         <Table
           sx={{
@@ -48,9 +50,11 @@ export default function AssetPage() {
           <TableHead>
             <TableRow>
               <TableCell>Measured at</TableCell>
+
               <TableCell>Price</TableCell>
             </TableRow>
           </TableHead>
+
           <TableBody>
             {assetRecords.map((record) => (
               <TableRow
@@ -64,6 +68,7 @@ export default function AssetPage() {
                 <TableCell component="th" scope="row">
                   {time_svc(record.measured_at).format('HH:mm DD/MM/YYYY')}
                 </TableCell>
+
                 <TableCell component="th" scope="row">
                   {`${record.currency} ${record.price / 100}`}
                 </TableCell>
