@@ -13,8 +13,6 @@ services:
       - "8000:8000"
     environment:
       - DATABASE_URL=postgres://postgres:postgres@postgres/inoa
-      - B3_ADAPTER=adapters.b3.brapi
-      - EMAIL_ADAPTER=adapters.email.sendgrid
 
   rabbitmq:
     image: rabbitmq:management
@@ -49,8 +47,6 @@ services:
     environment:
       - CELERY_BROKER_URL=pyamqp://guest:guest@rabbitmq/
       - DATABASE_URL=postgres://postgres:postgres@postgres/inoa
-      - B3_ADAPTER=adapters.b3.brapi
-      - EMAIL_ADAPTER=adapters.email.sendgrid
   beat:
     build: .
     container_name: beat
