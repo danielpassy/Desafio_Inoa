@@ -19,7 +19,7 @@ As such, the system should periodically record B3's stock prices and warn the in
 
 ### Running the Project
 
-To run the project, you need to have Docker, Docker Compose, Node. For you to receive an emial, you need either SENDGRID or MAILGUN API keys.
+To run the project, you need to have Docker, Docker Compose, Node. For you to receive an emial, you need either SENDGRID, MAILGUN API or configure SMTP env variables.
 
 Create an .env file and add the API key (skip if you don't want to receive emails)
 ```bash
