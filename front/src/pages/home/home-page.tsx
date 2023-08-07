@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Container,
+  InputAdornment,
   TextField,
   Typography,
 } from '@mui/material';
@@ -13,6 +14,7 @@ import useSnackbar from '@/hooks/snack-context';
 import { useNavigate } from 'react-router-dom';
 import { AlertsTable } from './alerts-table';
 import time_svc from '@/libs/time_svc';
+import { handleCurrencyInput } from '@/libs/decimal_svc';
 
 const allowedIntervals = [
   { label: '5 minutes', value: 5 * 60 },
@@ -37,10 +39,10 @@ export default function HomePage() {
   const [selectedAsset, setSelectedAsset] = useState<selectedAsset>(
     {} as selectedAsset,
   );
-  const [inferiorTunel, setInferiorTunel] = useState<number>(0);
-  const [superiorTunel, setSuperiorTunel] = useState<number>(0);
+  const [inferiorTunel, setInferiorTunel] = useState<number>(0.0);
+  const [superiorTunel, setSuperiorTunel] = useState<number>(0.0);
   const [interval, setInterval] = useState(allowedIntervals[0]);
-  const [lastPrice, setLastPrice] = useState<number>(0);
+  const [lastPrice, setLastPrice] = useState<number>(0.0);
   const lowestPriceRef = useRef<HTMLInputElement | null>(null);
   const snackbar = useSnackbar();
   const navigator = useNavigate();
@@ -232,6 +234,9 @@ function EditAlertsForm({
         id="outlined-basic"
         label="current price"
         variant="standard"
+        InputProps={{
+          startAdornment: <InputAdornment position="start">R$</InputAdornment>,
+        }}
       />
 
       <TextField
@@ -244,7 +249,12 @@ function EditAlertsForm({
         variant="outlined"
         inputRef={lowestPriceRef}
         value={inferiorTunel}
-        onChange={(e) => setInferiorTunel(Number(e.target.value))}
+        InputProps={{
+          startAdornment: <InputAdornment position="start">R$</InputAdornment>,
+        }}
+        onKeyDown={(e) => {
+          handleCurrencyInput(e, inferiorTunel, setInferiorTunel);
+        }}
       />
 
       <TextField
@@ -256,7 +266,12 @@ function EditAlertsForm({
         label="Higher Price"
         variant="outlined"
         value={superiorTunel}
-        onChange={(e) => setSuperiorTunel(Number(e.target.value))}
+        InputProps={{
+          startAdornment: <InputAdornment position="start">R$</InputAdornment>,
+        }}
+        onKeyDown={(e) => {
+          handleCurrencyInput(e, superiorTunel, setSuperiorTunel);
+        }}
       />
 
       <Autocomplete
