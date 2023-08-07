@@ -22,7 +22,6 @@ celery_app.autodiscover_tasks()
 
 @celery_app.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):
-    print("hiho")
     sender.add_periodic_task(crontab(minute="*/1"), update_stock_details.s())
     sender.add_periodic_task(
         crontab(minute="0", hour="10"), update_available_stocks.s()
