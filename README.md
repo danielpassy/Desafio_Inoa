@@ -6,7 +6,7 @@ The challenge was announced as:
 > A system that aids the investor in the decision making process of the buying/selling of Assets.
 As such, the system should periodically record B3's stock prices and warn the investor when a certain stock reaches a certain price by Email
 
-### Requirements:
+## Requirements:
 
 1. It should have a web interface that allowed users to:
     - Decide which stocks he wants to monitor;
@@ -17,7 +17,7 @@ As such, the system should periodically record B3's stock prices and warn the in
 4. It should email ths user suggesting him to sell if below the minimum price or buy if above the maximum price;
 5. It should be built using Django and Python;
 
-### Running the Project
+## Running the Project
 
 To run the project, you need to have Docker, Docker Compose, Node. For you to receive an emial, you need either SENDGRID, MAILGUN API or configure SMTP env variables.
 
@@ -26,7 +26,6 @@ Create an .env file and add the API key (skip if you don't want to receive email
 cd backend
 cp .env.example .env
 ```
-
 
 Initialize backend services:
 ```bash
@@ -39,8 +38,6 @@ npm install
 npx vite
 ```
 
-
-
 ## Technology overview
 
 The project is built using:
@@ -52,7 +49,7 @@ The project is built using:
 - CeleryBeat as a periodic task scheduler
 - Docker as containerization tool
 
-#### Discussion on the technology choices
+## Discussion on the technology choices
 
 - Django as REST API backend
 - Django Ninja, which provides:
