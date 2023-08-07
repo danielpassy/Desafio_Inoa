@@ -57,19 +57,22 @@ def warn_user():
     alerts = UserAlert.objects.select_related("asset", "user").all()
     assets_monitored = {a.asset_id for a in alerts}
 
-    last_records_for_each_asset = (
+    last_records = (
         AssetRecord.objects.filter(asset_id__in=assets_monitored)
         .annotate(max_measured_at=Max("measured_at"))
         .filter(max_measured_at=F("measured_at"))
-        .in_bulk(field_name="asset_id")
     )
+    last_record_per_asset = {
+        last_record.asset_id: last_record for last_record in last_records
+    }
+
     for alert in alerts:
         if alert.last_checked and (
             timezone.now() - alert.last_checked <= alert.interval
         ):
             continue
 
-        last_record = last_records_for_each_asset.get(alert.asset_id)
+        last_record = last_record_per_asset.get(alert.asset_id)
         if last_record is None:
             continue
 
@@ -85,7 +88,7 @@ def warn_user():
             email.send_email(
                 template="sell_stock" if should_sell else "buy_stock",
                 email=alert.user.email,
-                price=last_record.price,
+                price=f"{last_record.currency} {last_record.price/100}",
                 stock_symbol=alert.asset.symbol,
             )
             alert.last_checked = timezone.now()
