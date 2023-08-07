@@ -32,5 +32,5 @@ class AssetRecord(models.Model):
     currency = models.TextField(choices=Currency.choices)
     measured_at = models.DateTimeField(auto_now_add=True)
 
-    class meta:
-        orderering = ["-measure_at"]
+    class Meta:
+        ordering = ["-measured_at"]
