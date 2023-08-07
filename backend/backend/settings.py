@@ -164,5 +164,5 @@ ADAPTERS_KEY = {
 }
 ADAPTERS = {
     "B3": os.environ.get("B3_ADAPTER", "adapters.b3.mock"),
-    "EMAIL": os.environ.get("EMAIL_ADAPTER", "adapters.email.sendgrid"),
+    "EMAIL": os.environ.get("EMAIL_ADAPTER", "adapters.email.django_smtp"),
 }
